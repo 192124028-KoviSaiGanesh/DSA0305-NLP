@@ -1,0 +1,12 @@
+import inflect
+
+
+singular_nouns = ['cat', 'dog', 'book', 'city', 'country', 'apple']
+
+
+p = inflect.engine()
+
+
+for singular_noun in singular_nouns:
+    plural_form = p.plural(singular_noun)
+    print(f"The plural of {singular_noun} is {plural_form}")
