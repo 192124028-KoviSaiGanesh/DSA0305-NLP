@@ -1,0 +1,26 @@
+class StateMachine:
+    def __init__(self):
+        self.transitions = {
+            'q0': {'a': 'q0', 'b': 'q1'},
+            'q1': {'a': 'q2', 'b': 'q1'},
+            'q2': {'a': 'q2', 'b': 'q2'}
+        }
+        self.start_state = 'q0'
+        self.accept_states = {'q2'}
+        
+    def process_input(self, input_string):
+        current_state = self.start_state
+        for symbol in input_string:
+            if symbol not in self.transitions[current_state]:
+                return False
+            current_state = self.transitions[current_state][symbol]
+        return current_state in self.accept_states
+
+if __name__ == "__main__":
+    fsm = StateMachine()
+    test_strings = ['aaaab', 'ab', 'bab', 'aabb', 'abcab']
+    for test_string in test_strings:
+        if fsm.process_input(test_string):
+            print(f"Accepted: '{test_string}' ends with 'ab'")
+        else:
+            print(f"Rejected: '{test_string}' does not end with 'ab'")
