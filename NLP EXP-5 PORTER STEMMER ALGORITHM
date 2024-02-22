@@ -1,0 +1,13 @@
+from nltk.stem import PorterStemmer
+
+# Words to stem
+words_to_stem = ['running', 'jumps', 'swimming', 'happiness', 'running']
+
+# Initialize Porter Stemmer
+porter_stemmer = PorterStemmer()
+
+# Perform stemming and print
+stemmed_words = [porter_stemmer.stem(word) for word in words_to_stem]
+
+for original, stemmed in zip(words_to_stem, stemmed_words):
+    print(f"Original: {original} \t Stemmed: {stemmed}")
