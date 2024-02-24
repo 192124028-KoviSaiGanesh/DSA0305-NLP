@@ -1,0 +1,25 @@
+import nltk
+
+# Define PCFG rules
+pcfg_grammar = nltk.PCFG.fromstring("""
+    S -> NP VP [1.0]
+    NP -> Det N [0.5] | NP PP [0.3] | 'John' [0.1] | 'I' [0.1]
+    VP -> V NP [0.6] | VP PP [0.4]
+    PP -> P NP [1.0]
+    Det -> 'the' [0.6] | 'my' [0.4]
+    N -> 'man' [0.5] | 'telescope' [0.5]
+    V -> 'saw' [1.0]
+    P -> 'with' [0.61] | 'in' [0.39]
+""")
+
+# Define a function for PCFG parsing
+def pcfg_parse(sentence):
+    parser = nltk.ViterbiParser(pcfg_grammar)
+    parsed_trees = parser.parse(sentence.split())
+    for tree in parsed_trees:
+        print("Probability:", tree.prob())
+        tree.pretty_print()
+
+# Example usage
+sentence = "I saw the man with my telescope"
+pcfg_parse(sentence)
