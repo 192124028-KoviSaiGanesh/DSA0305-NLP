@@ -1,0 +1,53 @@
+def predict(grammar, chart, i):
+    for production in grammar:
+        lhs, rhs = production
+        if rhs[0] == chart[i]:
+            chart[i + 1].append((lhs, rhs, 0, i))
+
+def scan(chart, i, word):
+    for state in chart[i]:
+        lhs, rhs, dot, start = state
+        if dot < len(rhs) and rhs[dot] == word:
+            chart[i + 1].append((lhs, rhs, dot + 1, start))
+
+def complete(chart, i):
+    for state in chart[i]:
+        lhs, rhs, dot, start = state
+        if dot == len(rhs):
+            for st in chart[start]:
+                l, r, d, s = st
+                if d < len(r) and r[d] == lhs:
+                    chart[i].append((l, r, d + 1, s))
+
+def earley_parser(grammar, sentence):
+    chart = [[] for _ in range(len(sentence) + 1)]
+    chart[0].append(('START', ['S'], 0, 0))
+
+    for i in range(len(sentence) + 1):
+        predict(grammar, chart, i)
+        if i < len(sentence):
+            scan(chart, i, sentence[i])
+        complete(chart, i)
+
+    return any(state == ('START', ['S'], len(['S']), 0) for state in chart[-1])
+
+# Define a simple grammar
+grammar = [
+    ('S', ['NP', 'VP']),
+    ('NP', ['Det', 'N']),
+    ('VP', ['V', 'NP']),
+    ('Det', ['the']),
+    ('N', ['cat']),
+    ('V', ['chased'])
+]
+
+# Define a sample sentence
+sentence = ['the', 'cat', 'chased']
+
+# Parse the sentence using the Earley parser
+result = earley_parser(grammar, sentence)
+
+if result:
+    print("The sentence is valid according to the grammar.")
+else:
+    print("The sentence is not valid according to the grammar.")
