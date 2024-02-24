@@ -1,0 +1,27 @@
+import nltk
+nltk.download('wordnet')
+
+from nltk.corpus import wordnet
+
+# Retrieve synsets for the word "dog"
+synsets = wordnet.synsets("dog")
+
+# Print out the definitions for each synset
+for synset in synsets:
+    print(synset.definition())
+
+# Retrieve hyponyms for the first synset of "dog"
+hyponyms = synsets[0].hyponyms()
+
+# Print out the hyponyms
+print("Hyponyms of", synsets[0].name(), ":")
+for hyponym in hyponyms:
+    print(hyponym.name().split(".")[0])
+
+# Retrieve hypernyms for the first synset of "dog"
+hypernyms = synsets[0].hypernyms()
+
+# Print out the hypernyms
+print("Hypernyms of", synsets[0].name(), ":")
+for hypernym in hypernyms:
+    print(hypernym.name().split(".")[0])
