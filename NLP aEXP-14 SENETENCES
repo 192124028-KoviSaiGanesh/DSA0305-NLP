@@ -1,0 +1,14 @@
+def check_agreement(subject, verb):
+    if subject.endswith('s') and not verb.endswith('s'):
+        return False
+    return True
+
+# Define a sample sentence with subject and verb
+subject = "he"
+verb = "runs"
+
+# Check for agreement between subject and verb
+if check_agreement(subject, verb):
+    print(f"The subject '{subject}' agrees with the verb '{verb}'.")
+else:
+    print(f"Agreement error: The subject '{subject}' does not agree with the verb '{verb}'.")
