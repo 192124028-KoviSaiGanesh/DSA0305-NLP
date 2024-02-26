@@ -1,0 +1,45 @@
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+
+def perform_reference_resolution(text):
+    sentences = sent_tokenize(text)
+    tokenized_sentences = [word_tokenize(sentence) for sentence in sentences]
+    tagged_sentences = [nltk.pos_tag(sentence) for sentence in tokenized_sentences]
+
+    pronouns = set(['he', 'she', 'it', 'they', 'them', 'his', 'her', 'its', 'their', 'theirs'])
+
+    references = []
+    antecedents = []
+
+    for tagged_sentence in tagged_sentences:
+        for i in range(len(tagged_sentence)):
+            word, tag = tagged_sentence[i]
+            if word.lower() in pronouns:
+                # Check for antecedents within the same sentence
+                for j in range(i - 1, -1, -1):
+                    antecedent, antecedent_tag = tagged_sentence[j]
+                    if antecedent_tag.startswith('NN'):
+                        references.append(word)
+                        antecedents.append(antecedent)
+                        break
+                else:  # If no antecedent is found in the same sentence, consider previous sentences
+                    for prev_tagged_sentence in tagged_sentences:
+                        for antecedent, antecedent_tag in prev_tagged_sentence[::-1]:
+                            if antecedent_tag.startswith('NN'):
+                                references.append(word)
+                                antecedents.append(antecedent)
+                                break
+                        if references:
+                            break
+
+    return references, antecedents
+
+def main():
+    text = """John saw Mary and he greeted her. She smiled back at him."""
+    references, antecedents = perform_reference_resolution(text)
+
+    print("References:", references)
+    print("Antecedents:", antecedents)
+
+if __name__ == "__main__":
+    main()
