@@ -1,0 +1,22 @@
+def evaluate_coherence(text):
+    sentences = text.split('.')  # Split text into sentences
+    num_sentences = len(sentences)
+    total_sentence_length = sum(len(sentence.split()) for sentence in sentences)
+    average_sentence_length = total_sentence_length / num_sentences
+
+    words = text.split()
+    num_words = len(words)
+    total_word_length = sum(len(word) for word in words)
+    average_word_length = total_word_length / num_words
+
+    return average_sentence_length, average_word_length
+
+def main():
+    text = """Coherence in a text refers to the quality of the connections between ideas and how well the text flows from one idea to the next. A text with good coherence is easy to follow and understand, as the ideas are logically connected and presented in a clear and organized manner. On the other hand, a text with poor coherence may be confusing or difficult to follow, as the ideas may seem disjointed or unrelated. There are various factors that contribute to coherence in a text, including the use of transitional words and phrases, the logical organization of ideas, and the consistency of writing style and tone."""
+    average_sentence_length, average_word_length = evaluate_coherence(text)
+
+    print("Average Sentence Length:", average_sentence_length)
+    print("Average Word Length:", average_word_length)
+
+if __name__ == "__main__":
+    main()
