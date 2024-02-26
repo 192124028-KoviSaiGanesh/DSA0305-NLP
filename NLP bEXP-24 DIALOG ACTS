@@ -1,0 +1,56 @@
+import nltk
+from nltk.tokenize import word_tokenize
+
+
+# Download the missing resource
+nltk.download('words')
+
+def recognize_dialog_acts(dialog):
+    dialog_acts = []
+
+    # Tokenize the dialog into sentences
+    sentences = nltk.sent_tokenize(dialog)
+
+    for sentence in sentences:
+        # Tokenize each sentence into words
+        words = word_tokenize(sentence)
+
+        # Tag the words with part-of-speech tags
+        tagged_words = nltk.pos_tag(words)
+
+        # Extract named entities
+        named_entities = nltk.ne_chunk(tagged_words)
+
+        # Identify dialog acts based on patterns or rules
+        if any(word.lower() in ['hello', 'hi', 'hey'] for word, _ in tagged_words):
+            dialog_acts.append(('Greeting', sentence))
+        elif 'you' in [word.lower() for word, tag in tagged_words] and \
+             'thank' in [word.lower() for word, tag in tagged_words]:
+            dialog_acts.append(('Appreciation', sentence))
+        elif any(word.lower() in ['yes', 'yeah', 'sure'] for word, _ in tagged_words):
+            dialog_acts.append(('Affirmation', sentence))
+        elif any(word.lower() in ['no', 'nah', 'not'] for word, _ in tagged_words):
+            dialog_acts.append(('Negation', sentence))
+        else:
+            dialog_acts.append(('Statement', sentence))
+
+    return dialog_acts
+
+def main():
+    dialog = """
+    Speaker 1: Hello, how are you doing?
+    Speaker 2: Hi there! I'm doing well, thank you.
+    Speaker 1: That's good to hear.
+    Speaker 2: Yes, it's been a productive day.
+    Speaker 1: Would you like to grab some lunch?
+    Speaker 2: Sure, I'm hungry.
+    """
+
+    dialog_acts = recognize_dialog_acts(dialog)
+
+    print("Dialog Acts:")
+    for act, sentence in dialog_acts:
+        print(f"{act}: {sentence}")
+
+if __name__ == "__main__":
+    main()
