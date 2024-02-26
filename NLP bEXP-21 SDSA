@@ -1,0 +1,46 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.tag import pos_tag
+from nltk.chunk import RegexpParser
+
+def extract_noun_phrases(sentence):
+    # Tokenize the sentence
+    words = word_tokenize(sentence)
+    
+    # Perform part-of-speech tagging
+    tagged_words = pos_tag(words)
+    
+    # Define a grammar for noun phrases
+    grammar = r"""
+        NP: {<DT|JJ|NN.*>+}  # Chunk sequences of determiners, adjectives, and nouns
+    """
+    
+    # Create a chunk parser based on the grammar
+    chunk_parser = RegexpParser(grammar)
+    
+    # Apply the chunk parser to the tagged words
+    parsed_sentence = chunk_parser.parse(tagged_words)
+    
+    # Extract noun phrases
+    noun_phrases = []
+    for subtree in parsed_sentence.subtrees():
+        if subtree.label() == 'NP':
+            noun_phrase = ' '.join(word for word, tag in subtree.leaves())
+            noun_phrases.append(noun_phrase)
+    
+    return noun_phrases
+
+def main():
+    # Input sentence
+    sentence = "The quick brown fox jumps over the lazy dog."
+    
+    # Extract noun phrases
+    noun_phrases = extract_noun_phrases(sentence)
+    
+    # Print extracted noun phrases
+    print("Noun Phrases:")
+    for np in noun_phrases:
+        print("- " + np)
+
+if __name__ == "__main__":
+    main()
